@@ -75,8 +75,10 @@ class database:
 
     @staticmethod
     def update(Id, Nazwa=None, Opis=None, Cena=None, Miara_Ilosci=None, Ilosc=None):
-        if (Ilosc is not None and Ilosc < 0) or Id is None:
-            return 'Not'
+        if Ilosc is not None and Ilosc < 0:
+            return 'Not1'
+        if Id is None:
+            return 'Not2'
         conn = sqlite3.connect('baza.db')
         cursor = conn.cursor()
 
@@ -131,7 +133,7 @@ class database:
         if keyword is not None:
             query += " WHERE Produkt.Id LIKE '%{}%' OR Produkt.Nazwa LIKE '%{}%'".format(keyword, keyword)
 
-        if sort_by is not None:
+        if sort_by is not None and sort_by != '':
             query += " ORDER BY {}".format(sort_by)
 
         cursor.execute(query)

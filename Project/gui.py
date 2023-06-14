@@ -1,4 +1,9 @@
+import tkinter
 import tkinter as tk
+from tkinter import ttk
+
+from database import database
+
 
 class GUI:
     def __init__(self):
@@ -45,9 +50,10 @@ class GUI:
         # Middle Frame
         self.middle_frame = tk.Frame(self.main_window)
         self.middle_frame.pack(expand=True, fill="both")
+        self.search()
 
-        self.listbox = tk.Listbox(self.middle_frame)
-        self.listbox.pack(expand=True, fill="both")
+        #self.listbox = tk.Listbox(self.middle_frame)
+        #self.listbox.pack(expand=True, fill="both")
 
         # Separator Line
         self.separator2 = tk.Frame(self.main_window, height=2, bd=1, relief=tk.SUNKEN)
@@ -71,6 +77,7 @@ class GUI:
         text_input = self.text.get("1.0", "end-1c")  # Retrieve text from the text field
         print(text_input)  # Call the method with the text input
         self.text.delete("1.0", "end")
+        self.search()
 
     def update_list(self):
         # Clear the existing items in the listbox
@@ -83,16 +90,56 @@ class GUI:
 
 
     def add(self):
-        return 0
+        #pobieranie wartości
+        resoult = database.add(1,'Nazwa','Opis','Cena','Miara_ilosci','Ilosc')
+        if resoult == 'Not':
+            tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+
 
     def delete(self):
-        return 0
+        #pobieranie watoście id
+        resoult = database.delete(1)
+        if resoult == 'Not':
+            tkinter.messagebox.showinfo('Error', 'Id cannot by null')
+
 
     def update(self):
-        return 0
+        # pobieranie wartości
+        resoult = database.update(1, 'Nazwa', 'Opis', 'Cena', 'Miara_ilosci', 'Ilosc')
+        if resoult == 'Not1':
+            tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+        if resoult == 'Not2':
+            tkinter.messagebox.showinfo('Error', 'Id cannot by null')
 
     def search(self):
-        return 0
+        text_input = self.text.get("1.0", "end-1c")
+        selected_option = self.attribute_var.get()
+        inMagazine = self.magazine_var.get()
+        resoult = database.search(keyword=text_input, sort_by=selected_option, include_zero=inMagazine)
+
+        for widget in self.middle_frame.winfo_children():
+            widget.destroy()
+
+        self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Miara_Ilosci", "Ilosc"))
+
+        self.tree.heading("Id", text="ID")
+        self.tree.heading("Nazwa", text="Nazwa")
+        self.tree.heading("Opis", text="Opis")
+        self.tree.heading("Cena", text="Cena")
+        self.tree.heading("Miara_Ilosci", text="Miara Ilości")
+        self.tree.heading("Ilosc", text="Ilość")
+
+        for item in resoult:
+            self.tree.insert("", tk.END, values=item)
+
+        scrollbar = ttk.Scrollbar(self.middle_frame, orient=tk.VERTICAL, command=self.tree.yview)
+        self.tree.configure(yscrollcommand=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.tree.pack(fill=tk.BOTH, expand=True)
+
+
+
 
 # Create an instance of the GUI class
 gui = GUI()
