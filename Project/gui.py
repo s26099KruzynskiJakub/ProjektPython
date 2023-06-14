@@ -56,21 +56,57 @@ class GUI:
         # Bottom Frame
         self.bottom_frame = tk.Frame(self.main_window)
         self.bottom_frame.pack(side="bottom")
-        self.bottom_label = tk.Label(self.bottom_frame, text="Bottom Frame")
-        self.bottom_label.pack()
 
-        # Adjust weight to make the middle frame bigger
-        self.main_window.grid_rowconfigure(2, weight=1)
+        # List of column names
+        column_names = ["ID", "Nazwa", "Opis", "Ocena", "Ilość", "Miara"]
 
+        # Create labels for column names
+        for i, name in enumerate(column_names):
+            label = tk.Label(self.bottom_frame, text=name)
+            label.grid(row=0, column=i, padx=5, pady=5)
 
+        # List of record values
+        record_values = ["1", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
 
-        self.text.bind("<Return>", self.call_method)
-        tk.mainloop()
+        # Create entry fields for record values
+        entry_fields = []
+        for i, value in enumerate(record_values):
+            entry = tk.Entry(self.bottom_frame)
+            entry.insert(tk.END, value)
+            entry.grid(row=1, column=i, padx=5, pady=5)
+            entry_fields.append(entry)
+
+            # Create buttons
+            button_frame = tk.Frame(self.bottom_frame)
+            button_frame.grid(row=1, column=len(column_names), padx=5, pady=5, rowspan=2)
+
+            button_dodaj = tk.Button(button_frame, text="Dodaj")
+            button_dodaj.pack(fill="x", side='left')
+
+            button_usun = tk.Button(button_frame, text="Usuń")
+            button_usun.pack(fill="x", side='left')
+
+            button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj")
+            button_zaktualizuj.pack(fill="x",side='left')
+
+        self.main_window.mainloop()
+
+    def submit_values(self, entry_fields):
+        # Retrieve the values from the entry fields
+        values = [entry.get() for entry in entry_fields]
+        # Do something with the values
+        print(values)
 
     def call_method(self,event=None):
         text_input = self.text.get("1.0", "end-1c")  # Retrieve text from the text field
         print(text_input)  # Call the method with the text input
         self.text.delete("1.0", "end")
+
+    def call_method2(self,event=None):
+        text_input = self.text1.get("1.0", "end-1c")  # Retrieve text from the text field
+        print(text_input)  # Call the method with the text input
+        self.text.delete("1.0", "end")
+
 
     def update_list(self):
         # Clear the existing items in the listbox
