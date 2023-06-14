@@ -18,6 +18,9 @@ class GUI:
         self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
         self.separator_lineFirst.pack(side='left', padx=5, pady=5, fill='y')
 
+        self.bottom_label = tk.Label(self.top_frame, text="OrderBy: ")
+        self.bottom_label.pack(side='left')
+
         # Checkbuttons for advanced search attributes
         self.attribute_var = tk.StringVar()
         self.attribute_checkbuttons = []
@@ -42,8 +45,9 @@ class GUI:
         # Middle Frame
         self.middle_frame = tk.Frame(self.main_window)
         self.middle_frame.pack(expand=True, fill="both")
-        self.middle_label = tk.Label(self.middle_frame, text="Middle Frame")
-        self.middle_label.pack()
+
+        self.listbox = tk.Listbox(self.middle_frame)
+        self.listbox.pack(expand=True, fill="both")
 
         # Separator Line
         self.separator2 = tk.Frame(self.main_window, height=2, bd=1, relief=tk.SUNKEN)
@@ -68,15 +72,15 @@ class GUI:
         print(text_input)  # Call the method with the text input
         self.text.delete("1.0", "end")
 
+    def update_list(self):
+        # Clear the existing items in the listbox
+        self.listbox.delete(0, tk.END)
 
+        # Add new items to the listbox
+        items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
+        for item in items:
+            self.listbox.insert(tk.END, item)
 
-    def select_value(self):
-        # Function to handle the button click event
-        selected_value = self.value_button.cget("text")
-        if selected_value == "Name":
-            self.value_button.configure(text="ID")
-        else:
-            self.value_button.configure(text="Name")
 
 # Create an instance of the GUI class
 gui = GUI()
