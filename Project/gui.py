@@ -71,17 +71,17 @@ class GUI:
             entry.grid(row=1, column=i, padx=5, pady=5)
             entry_fields.append(entry)
 
-            button_frame = tk.Frame(self.bottom_frame)
-            button_frame.grid(row=1, column=len(column_names), padx=5, pady=5, rowspan=2)
+        button_frame = tk.Frame(self.bottom_frame)
+        button_frame.grid(row=1, column=len(column_names), padx=5, pady=5, rowspan=2)
 
-            button_dodaj = tk.Button(button_frame, text="Dodaj")
-            button_dodaj.pack(fill="x", side='left')
+        button_dodaj = tk.Button(button_frame, text="Dodaj")
+        button_dodaj.pack(fill="x", side='left')
 
-            button_usun = tk.Button(button_frame, text="Usuń")
-            button_usun.pack(fill="x", side='left')
+        button_usun = tk.Button(button_frame, text="Usuń")
+        button_usun.pack(fill="x", side='left')
 
-            button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj")
-            button_zaktualizuj.pack(fill="x",side='left')
+        button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj")
+        button_zaktualizuj.pack(fill="x",side='left')
 
         self.main_window.mainloop()
 
