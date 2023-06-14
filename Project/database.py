@@ -119,6 +119,32 @@ class database:
         conn.close()
         return 'Ok'
 
+    @staticmethod
+    def search(keyword=None, sort_by=None, include_zero=False):
+        conn = sqlite3.connect('baza.db')
+        cursor = conn.cursor()
 
-    #metoda serch zwracająca listę danych wraz z mozliwością szukania po nazwa lub id oraz order by
+        query = "SELECT Produkt.Id, Produkt.Nazwa, Produkt.Opis, Produkt.Cena, Produkt.Miara_Ilosci, Magazyn.Ilosc " \
+                "FROM Produkt " \
+                "LEFT JOIN Magazyn ON Produkt.Id = Magazyn.Produkt_Id"
+
+        if keyword is not None:
+            query += " WHERE Produkt.Id LIKE '%{}%' OR Produkt.Nazwa LIKE '%{}%'".format(keyword, keyword)
+
+        if sort_by is not None:
+            query += " ORDER BY {}".format(sort_by)
+
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        results = []
+        for row in rows:
+            Id, Nazwa, Opis, Cena, Miara_Ilosci, Ilosc = row
+            if not include_zero and Ilosc == 0:
+                continue
+            results.append((Id, Nazwa, Opis, Cena, Miara_Ilosci, Ilosc))
+
+        conn.close()
+        return results
+
 
