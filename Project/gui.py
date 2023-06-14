@@ -78,6 +78,18 @@ class GUI:
         else:
             self.value_button.configure(text="Name")
 
+    def add(self):
+        return 0
+
+    def delete(self):
+        return 0
+
+    def update(self):
+        return 0
+
+    def search(self):
+        return 0
+
 # Create an instance of the GUI class
 gui = GUI()
 

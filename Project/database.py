@@ -38,8 +38,8 @@ class database:
         connection.close()
 
     @staticmethod
-    def add(Id,Nazwa,Opis,Cena,Miara_Ilosci,Ilosc):
-        if Ilosc < 0 and Ilosc is not None:
+    def add(Id,Nazwa=None,Opis=None,Cena=None,Miara_Ilosci=None,Ilosc=None):
+        if Ilosc is not None and Ilosc <0:
             return 'Not'
         connection = sqlite3.connect('baza.db')
         cursor = connection.cursor()
@@ -75,7 +75,7 @@ class database:
 
     @staticmethod
     def update(Id, Nazwa=None, Opis=None, Cena=None, Miara_Ilosci=None, Ilosc=None):
-        if Ilosc < 0 or Id is not None:
+        if (Ilosc is not None and Ilosc < 0) or Id is None:
             return 'Not'
         conn = sqlite3.connect('baza.db')
         cursor = conn.cursor()
@@ -146,5 +146,6 @@ class database:
 
         conn.close()
         return results
+
 
 
