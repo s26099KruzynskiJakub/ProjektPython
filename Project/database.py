@@ -39,6 +39,8 @@ class database:
 
     @staticmethod
     def add(Id,Nazwa,Opis,Cena,Miara_Ilosci,Ilosc):
+        if Ilosc < 0 and Ilosc is not None:
+            return 'Not'
         connection = sqlite3.connect('baza.db')
         cursor = connection.cursor()
         query = "SELECT Ilosc FROM Magazyn WHERE Produkt_Id = ? AND Ilosc > 0"
@@ -49,6 +51,7 @@ class database:
             query = "UPDATE Magazyn SET Ilosc = ? WHERE Produkt_Id = ?"
             cursor.execute(query, (poZmianie, Id))
             connection.commit()
+            connection.close()
             return 'Ok'
         query = "SELECT Ilosc FROM Magazyn WHERE Produkt_Id = ?"
         cursor.execute(query, (Id,))
@@ -57,19 +60,65 @@ class database:
             query = "UPDATE Magazyn SET Ilosc = ? WHERE Produkt_Id = ?"
             cursor.execute(query, (Ilosc, Id))
             connection.commit()
+            connection.close()
             return 'Ok'
-
-
+        product_data = (Nazwa, Opis, Cena, Miara_Ilosci)
+        query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci) VALUES (?, ?, ?, ?)"
+        cursor.execute(query, product_data)
+        product_id = cursor.lastrowid
+        magazyn_data = (product_id, Ilosc)
+        query = "INSERT INTO Magazyn (Produkt_Id, Ilosc) VALUES (?, ?)"
+        cursor.execute(query, magazyn_data)
         connection.commit()
         connection.close()
+        return 'Ok'
+
+    @staticmethod
+    def update(Id, Nazwa=None, Opis=None, Cena=None, Miara_Ilosci=None, Ilosc=None):
+        if Ilosc < 0 or Id is not None:
+            return 'Not'
+        conn = sqlite3.connect('baza.db')
+        cursor = conn.cursor()
+
+        update_values = []
+        if Nazwa is not None:
+            update_values.append("Nazwa = '{}'".format(Nazwa))
+        if Opis is not None:
+            update_values.append("Opis = '{}'".format(Opis))
+        if Cena is not None:
+            update_values.append("Cena = {}".format(Cena))
+        if Miara_Ilosci is not None:
+            update_values.append("Miara_Ilosci = '{}'".format(Miara_Ilosci))
+
+        update_query = "UPDATE Produkt SET " + ", ".join(update_values) + " WHERE Id = {}".format(Id)
+
+        if Ilosc is not None:
+            update_query_magazyn = "UPDATE Magazyn SET Ilosc = {} WHERE Produkt_Id = {}".format(Ilosc, Id)
+            cursor.execute(update_query_magazyn)
+
+        cursor.execute(update_query)
+        conn.commit()
+        conn.close()
+        return 'Ok'
+
+    @staticmethod
+    def delete(Id):
+        if Id is None:
+            print("ID cannot be null.")
+            return 'Not'
+
+        conn = sqlite3.connect('baza.db')
+        cursor = conn.cursor()
+
+        delete_query_produkt = "DELETE FROM Produkt WHERE Id = {}".format(Id)
+        cursor.execute(delete_query_produkt)
+
+        delete_query_magazyn = "DELETE FROM Magazyn WHERE Produkt_Id = {}".format(Id)
+        cursor.execute(delete_query_magazyn)
+        conn.commit()
+        conn.close()
+        return 'Ok'
 
 
-
-
-MyDatabase = database()
-
-    #metoda addValuesToDatabase dodająca podstawowe wartości
     #metoda serch zwracająca listę danych wraz z mozliwością szukania po nazwa lub id oraz order by
-    #metoda init króra sprawdza czy bazadanych istnieje i może wyłować create
-    #metoda modyfikujProdukt zmienia informacje o produkcie
-    #metoda usunProdukt usuwa produkt
+
