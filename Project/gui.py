@@ -126,7 +126,8 @@ class GUI:
                 data.append(value)
 
             #Błędy
-            self.throwError(data)
+            if(self.throwError(data)):
+                return
 
             resoult = database.add(data[0],data[1],data[2],data[3],data[5],data[4])
             if resoult == 'Not':
@@ -141,21 +142,20 @@ class GUI:
                 data[0] = int(data[0])
         except ValueError:
             tkinter.messagebox.showinfo('Error', 'ID must be an integer')
-            return
+            return True
         try:
             if data[4] is not None:
                 data[4] = float(data[4])
         except ValueError:
-            tkinter.messagebox.showinfo('Error', 'Ilość must be a float')
-            return
+            tkinter.messagebox.showinfo('Error', 'Ilosc must be a float')
+            return True
         try:
             if data[3] is not None:
                 data[3] = float(data[3])
         except ValueError:
             tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
-            return
-        return data
-
+            return True
+        return False
     def delete(self):
         data = []
         for entry in self.entry_fields:
@@ -164,7 +164,8 @@ class GUI:
                 value = None
             data.append(value)
 
-        self.throwError(data)
+        if (self.throwError(data)):
+            return
 
         resoult = database.delete(data[0])
         if resoult == 'Not':
@@ -180,7 +181,8 @@ class GUI:
                 value = None
             data.append(value)
 
-        self.throwError(data)
+        if (self.throwError(data)):
+            return
 
         resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not1':
