@@ -14,10 +14,10 @@ class GUI:
         self.top_frame = tk.Frame(self.main_window)
         self.top_frame.pack(side="top")
 
-        self.text = tk.Text(self.top_frame, insertbackground='blue')
-        self.text.pack(side='left', pady=10)
+        self.text = tk.Text(self.top_frame,insertbackground='blue')
+        self.text.pack(side='left',pady=10)
         self.text.config(width=10, height=1)
-        self.buttomSearch = tk.Button(self.top_frame, text='Szukaj', command=self.call_method)
+        self.buttomSearch = tk.Button(self.top_frame,text='Szukaj',command=self.call_method)
         self.buttomSearch.pack(side='left')
 
         self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
@@ -26,20 +26,21 @@ class GUI:
         self.bottom_label = tk.Label(self.top_frame, text="OrderBy: ")
         self.bottom_label.pack(side='left')
 
+
         self.attribute_var = tk.StringVar()
         self.attribute_checkbuttons = []
         attributes = ["ID", "Nazwa", "Opis", "Ocena", "Ilość", "Miara"]
         for attribute in attributes:
             checkbutton = tk.Checkbutton(self.top_frame, text=attribute, variable=self.attribute_var, onvalue=attribute,
                                          offvalue="")
-            checkbutton.pack(anchor="w", side='left')
+            checkbutton.pack(anchor="w",side='left')
             self.attribute_checkbuttons.append(checkbutton)
 
         self.separator_line = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
         self.separator_line.pack(side='left', padx=5, pady=5, fill='y')
         self.magazine_var = tk.BooleanVar()
         self.magazine_button = tk.Checkbutton(self.top_frame, text="Must be in magazine", variable=self.magazine_var)
-        self.magazine_button.pack(anchor="w", fill="both")
+        self.magazine_button.pack(anchor="w",fill="both")
 
         self.separator1 = tk.Frame(self.main_window, height=5, bd=1, relief=tk.SUNKEN)
         self.separator1.pack(fill="x")
@@ -48,8 +49,8 @@ class GUI:
         self.middle_frame.pack(expand=True, fill="both")
         self.search()
 
-        # self.listbox = tk.Listbox(self.middle_frame)
-        # self.listbox.pack(expand=True, fill="both")
+        #self.listbox = tk.Listbox(self.middle_frame)
+        #self.listbox.pack(expand=True, fill="both")
 
         self.separator2 = tk.Frame(self.main_window, height=2, bd=1, relief=tk.SUNKEN)
         self.separator2.pack(fill="x")
@@ -75,14 +76,14 @@ class GUI:
         button_frame = tk.Frame(self.bottom_frame)
         button_frame.grid(row=1, column=len(column_names), padx=5, pady=5, rowspan=2)
 
-        button_dodaj = tk.Button(button_frame, text="Dodaj", command=self.add)
+        button_dodaj = tk.Button(button_frame, text="Dodaj",command=self.add)
         button_dodaj.pack(fill="x", side='left')
 
-        button_usun = tk.Button(button_frame, text="Usuń", command=self.delete)
+        button_usun = tk.Button(button_frame, text="Usuń",command=self.delete)
         button_usun.pack(fill="x", side='left')
 
-        button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj", command=self.update)
-        button_zaktualizuj.pack(fill="x", side='left')
+        button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj",command=self.update)
+        button_zaktualizuj.pack(fill="x",side='left')
 
         self.main_window.mainloop()
 
@@ -90,11 +91,12 @@ class GUI:
         values = [entry.get() for entry in entry_fields]
         print(values)
 
-    def call_method(self, event=None):
+    def call_method(self,event=None):
         text_input = self.text.get("1.0", "end-1c")  # Retrieve text from the text field
         print(text_input)  # Call the method with the text input
-        # self.text.delete("1.0", "end")
+        #self.text.delete("1.0", "end")
         self.search()
+
 
     def update_list(self):
         # Clear the existing items in the listbox
@@ -105,41 +107,37 @@ class GUI:
         for item in items:
             self.listbox.insert(tk.END, item)
 
+
     def add(self):
-        addingValues = []
+        data = []
         for entry in self.entry_fields:
             value = entry.get()
-            if value == "":
-                value = None  # Replace empty string with None
-            addingValues.append(value)
-        resoult = database.add(int(addingValues[0]), addingValues[1], addingValues[2], float(addingValues[3]),
-                               addingValues[5], int(addingValues[4]))
+            data.append(value)
+        resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
         self.search()
 
+
     def delete(self):
         data = []
         for entry in self.entry_fields:
             value = entry.get()
-            if value == "":
-                value = None
             data.append(value)
         resoult = database.delete(data[0])
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
         self.search()
 
+
     def update(self):
         data = []
         for entry in self.entry_fields:
             value = entry.get()
-            if value == "":
-                value = None
             data.append(value)
-        resoult = database.update(int(data[0]), data[1], data[2], float(data[3]), data[5], int(data[4]))
+        resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
         if resoult == 'Not2':
@@ -188,6 +186,7 @@ class GUI:
         for i, value in enumerate(values):
             self.entry_fields[i].delete(0, tk.END)
             self.entry_fields[i].insert(tk.END, value)
+
 
 
 # Create an instance of the GUI class
