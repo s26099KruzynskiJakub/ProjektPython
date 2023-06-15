@@ -3,6 +3,7 @@ import tkinter
 import tkinter as tk
 from datetime import datetime
 from tkinter import ttk
+from tkinter import messagebox
 
 from database import database
 
@@ -127,24 +128,24 @@ class GUI:
             #Błędy
             try:
                 if data[0] is not None:
-                    id_value = int(data[0])
+                    data[0] = int(data[0])
             except ValueError:
                 tkinter.messagebox.showinfo('Error', 'ID must be an integer')
                 return
             try:
                 if data[4] is not None:
-                    ilosc_value = float(data[4])
+                    data[4] = float(data[4])
             except ValueError:
                 tkinter.messagebox.showinfo('Error', 'Ilość must be a float')
                 return
             try:
                 if data[3] is not None:
-                  ocena_value = (data[3])
+                  data[3] = (data[3])
             except ValueError:
                 tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
                 return
 
-            resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
+            resoult = database.add(data[0],data[1],data[2],data[3],data[5],data[4])
             if resoult == 'Not':
                 tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
             if resoult == 'Not1':
@@ -237,6 +238,7 @@ class GUI:
         with open(file_path, "w") as file:
             for item in data_list:
                 file.write(str(item) + "\n")
+        tkinter.messagebox.showinfo('Raport', 'Raport zapisany w forderze raoporty')
 
 # metoda createDatabase tworząca bazę danych
 # metoda addValuesToDatabase dodająca podstawowe wartości

@@ -43,19 +43,6 @@ class database:
             return 'Not'
         connection = sqlite3.connect('baza.db')
         cursor = connection.cursor()
-        if Id is None:
-            if Nazwa is None:
-                return 'Not1'
-            product_data = (Nazwa, Opis, Cena, Miara_Ilosci)
-            query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci) VALUES (?, ?, ?, ?)"
-            cursor.execute(query, product_data)
-            product_id = cursor.lastrowid
-            magazyn_data = (product_id, Ilosc)
-            query = "INSERT INTO Magazyn (Produkt_Id, Ilosc) VALUES (?, ?)"
-            cursor.execute(query, magazyn_data)
-            connection.commit()
-            connection.close()
-            return 'Ok'
         query = "SELECT Ilosc FROM Magazyn WHERE (Produkt_Id = ? OR (Nazwa = ? AND Opis = ? AND Cena = ? AND Miara_Ilosci = ?)) AND Ilosc > 0"
         cursor.execute(query, (Id,Nazwa,Opis,Cena,Miara_Ilosci))
         result = cursor.fetchone()
@@ -75,6 +62,18 @@ class database:
             connection.commit()
             connection.close()
             return 'Ok'
+        if Nazwa is None:
+            return 'Not1'
+        product_data = (Nazwa, Opis, Cena, Miara_Ilosci)
+        query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci) VALUES (?, ?, ?, ?)"
+        cursor.execute(query, product_data)
+        product_id = cursor.lastrowid
+        magazyn_data = (product_id, Ilosc)
+        query = "INSERT INTO Magazyn (Produkt_Id, Ilosc) VALUES (?, ?)"
+        cursor.execute(query, magazyn_data)
+        connection.commit()
+        connection.close()
+        return 'Ok'
 
 
 
