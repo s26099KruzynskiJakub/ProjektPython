@@ -73,7 +73,7 @@ class GUI:
             label = tk.Label(self.bottom_frame, text=name)
             label.grid(row=0, column=i, padx=5, pady=5)
 
-        record_values = ["1", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
+        record_values = ["JakiesId", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
 
         self.entry_fields = []
         for i, value in enumerate(record_values):
@@ -96,9 +96,6 @@ class GUI:
 
         self.main_window.mainloop()
 
-    def submit_values(self, entry_fields):
-        values = [entry.get() for entry in entry_fields]
-        print(values)
 
     def call_method(self,event=None):
         text_input = self.text.get("1.0", "end-1c")  # Retrieve text from the text field
