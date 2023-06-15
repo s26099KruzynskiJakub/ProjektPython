@@ -126,17 +126,20 @@ class GUI:
 
             #Błędy
             try:
-                id_value = int(data[0])
+                if data[0] is not None:
+                    id_value = int(data[0])
             except ValueError:
                 tkinter.messagebox.showinfo('Error', 'ID must be an integer')
                 return
             try:
-                 ilosc_value = float(data[4])
+                if data[4] is not None:
+                    ilosc_value = float(data[4])
             except ValueError:
                 tkinter.messagebox.showinfo('Error', 'Ilość must be a float')
                 return
             try:
-                ocena_value = (data[3])
+                if data[3] is not None:
+                  ocena_value = (data[3])
             except ValueError:
                 tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
                 return
