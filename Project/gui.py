@@ -125,7 +125,6 @@ class GUI:
                     value=None
                 data.append(value)
 
-            #Błędy
             if(self.throwError(data)):
                 return
 
@@ -135,6 +134,8 @@ class GUI:
             if resoult == 'Not1':
                 tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
             self.search()
+
+            tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
     def throwError(self, data):
         try:
@@ -171,6 +172,7 @@ class GUI:
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
         self.search()
+        tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
 
     def update(self):
@@ -190,6 +192,7 @@ class GUI:
         if resoult == 'Not2':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
         self.search()
+        tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
     def search(self):
         text_input = self.text.get("1.0", "end-1c")
