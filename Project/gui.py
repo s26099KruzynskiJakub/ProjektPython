@@ -126,24 +126,7 @@ class GUI:
                 data.append(value)
 
             #Błędy
-            try:
-                if data[0] is not None:
-                    data[0] = int(data[0])
-            except ValueError:
-                tkinter.messagebox.showinfo('Error', 'ID must be an integer')
-                return
-            try:
-                if data[4] is not None:
-                    data[4] = float(data[4])
-            except ValueError:
-                tkinter.messagebox.showinfo('Error', 'Ilość must be a float')
-                return
-            try:
-                if data[3] is not None:
-                  data[3] = (data[3])
-            except ValueError:
-                tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
-                return
+            self.throwError(data)
 
             resoult = database.add(data[0],data[1],data[2],data[3],data[5],data[4])
             if resoult == 'Not':
@@ -152,6 +135,26 @@ class GUI:
                 tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
             self.search()
 
+    def throwError(self, data):
+        try:
+            if data[0] is not None:
+                data[0] = int(data[0])
+        except ValueError:
+            tkinter.messagebox.showinfo('Error', 'ID must be an integer')
+            return
+        try:
+            if data[4] is not None:
+                data[4] = float(data[4])
+        except ValueError:
+            tkinter.messagebox.showinfo('Error', 'Ilość must be a float')
+            return
+        try:
+            if data[3] is not None:
+                data[3] = (data[3])
+        except ValueError:
+            tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
+            return
+        return data
 
     def delete(self):
         data = []
@@ -160,6 +163,9 @@ class GUI:
             if (value == ""):
                 value = None
             data.append(value)
+
+        self.throwError(data)
+
         resoult = database.delete(data[0])
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
@@ -173,6 +179,9 @@ class GUI:
             if (value == ""):
                 value = None
             data.append(value)
+
+        self.throwError(data)
+
         resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
@@ -239,6 +248,8 @@ class GUI:
             for item in data_list:
                 file.write(str(item) + "\n")
         tkinter.messagebox.showinfo('Raport', 'Raport zapisany w forderze raoporty')
+
+
 
 # metoda createDatabase tworząca bazę danych
 # metoda addValuesToDatabase dodająca podstawowe wartości
