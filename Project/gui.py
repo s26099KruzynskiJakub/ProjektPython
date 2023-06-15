@@ -1,5 +1,6 @@
 import tkinter
 import tkinter as tk
+from datetime import datetime
 from tkinter import ttk
 
 from database import database
@@ -13,6 +14,12 @@ class GUI:
 
         self.top_frame = tk.Frame(self.main_window)
         self.top_frame.pack(side="top")
+
+        self.buttomRaport = tk.Button(self.top_frame,text='Stwórz raport',command=self.createRaport)
+        self.buttomRaport.pack(side='left')
+
+        self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
+        self.separator_lineFirst.pack(side='left', padx=5, pady=5, fill='y')
 
         self.text = tk.Text(self.top_frame,insertbackground='blue')
         self.text.pack(side='left',pady=10)
@@ -189,6 +196,12 @@ class GUI:
 
     def createRaport(self):
         resoult = database.search()
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        file_name = f"{current_date}.txt"
+
+        with open(file_name, "w") as file:
+            for item in resoult:
+                file.write(str(item) + "\n")
 
 
 
