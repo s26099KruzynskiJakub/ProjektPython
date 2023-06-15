@@ -38,13 +38,26 @@ class database:
         connection.close()
 
     @staticmethod
-    def add(Id,Nazwa=None,Opis=None,Cena=None,Miara_Ilosci=None,Ilosc=None):
+    def add(Id=None,Nazwa=None,Opis=None,Cena=None,Miara_Ilosci=None,Ilosc=None):
         if Ilosc is not None and Ilosc < 0:
             return 'Not'
         connection = sqlite3.connect('baza.db')
         cursor = connection.cursor()
-        query = "SELECT Ilosc FROM Magazyn WHERE Produkt_Id = ? AND Ilosc > 0"
-        cursor.execute(query, (Id,))
+        if Id is None:
+            if Nazwa is None:
+                return 'Not1'
+            product_data = (Nazwa, Opis, Cena, Miara_Ilosci)
+            query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci) VALUES (?, ?, ?, ?)"
+            cursor.execute(query, product_data)
+            product_id = cursor.lastrowid
+            magazyn_data = (product_id, Ilosc)
+            query = "INSERT INTO Magazyn (Produkt_Id, Ilosc) VALUES (?, ?)"
+            cursor.execute(query, magazyn_data)
+            connection.commit()
+            connection.close()
+            return 'Ok'
+        query = "SELECT Ilosc FROM Magazyn WHERE (Produkt_Id = ? OR (Nazwa = ? AND Opis = ? AND Cena = ? AND Miara_Ilosci = ?)) AND Ilosc > 0"
+        cursor.execute(query, (Id,Nazwa,Opis,Cena,Miara_Ilosci))
         result = cursor.fetchone()
         if result:
             poZmianie = result[0] + Ilosc
@@ -62,18 +75,8 @@ class database:
             connection.commit()
             connection.close()
             return 'Ok'
-        if Nazwa is None:
-            return 'Not1'
-        product_data = (Nazwa, Opis, Cena, Miara_Ilosci)
-        query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci) VALUES (?, ?, ?, ?)"
-        cursor.execute(query, product_data)
-        product_id = cursor.lastrowid
-        magazyn_data = (product_id, Ilosc)
-        query = "INSERT INTO Magazyn (Produkt_Id, Ilosc) VALUES (?, ?)"
-        cursor.execute(query, magazyn_data)
-        connection.commit()
-        connection.close()
-        return 'Ok'
+
+
 
     @staticmethod
     def update(Id, Nazwa=None, Opis=None, Cena=None, Miara_Ilosci=None, Ilosc=None):
@@ -146,7 +149,7 @@ class database:
             Id, Nazwa, Opis, Cena, Miara_Ilosci, Ilosc = row
             if not include_zero and Ilosc == 0:
                 continue
-            results.append((Id, Nazwa, Opis, Cena, Miara_Ilosci, Ilosc))
+            results.append((Id, Nazwa, Opis, Cena, Ilosc, Miara_Ilosci))
 
         conn.close()
         return results
