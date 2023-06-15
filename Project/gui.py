@@ -150,7 +150,7 @@ class GUI:
             return
         try:
             if data[3] is not None:
-                data[3] = (data[3])
+                data[3] = float(data[3])
         except ValueError:
             tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
             return
