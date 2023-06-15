@@ -136,26 +136,7 @@ class GUI:
                 tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
             self.search()
 
-    def throwError(self, data):
-        try:
-            if data[0] is not None:
-                data[0] = int(data[0])
-        except ValueError:
-            tkinter.messagebox.showinfo('Error', 'ID must be an integer')
-            return True
-        try:
-            if data[4] is not None:
-                data[4] = float(data[4])
-        except ValueError:
-            tkinter.messagebox.showinfo('Error', 'Ilosc must be a float')
-            return True
-        try:
-            if data[3] is not None:
-                data[3] = float(data[3])
-        except ValueError:
-            tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
-            return True
-        return False
+
     def delete(self):
         data = []
         for entry in self.entry_fields:
@@ -190,6 +171,27 @@ class GUI:
         if resoult == 'Not2':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
         self.search()
+
+    def throwError(self, data):
+        try:
+            if data[0] is not None:
+                data[0] = int(data[0])
+        except ValueError:
+            tkinter.messagebox.showinfo('Error', 'ID must be an integer')
+            return True
+        try:
+            if data[4] is not None:
+                data[4] = float(data[4])
+        except ValueError:
+            tkinter.messagebox.showinfo('Error', 'Ilosc must be a float')
+            return True
+        try:
+            if data[3] is not None:
+                data[3] = float(data[3])
+        except ValueError:
+            tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
+            return True
+        return False
 
     def search(self):
         text_input = self.text.get("1.0", "end-1c")
