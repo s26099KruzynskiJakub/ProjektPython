@@ -55,6 +55,8 @@ class database:
             return 'Ok'
         if Nazwa is None:
             return 'Not1'
+        if Ilosc is None:
+            Ilosc = 0
         product_data = (Nazwa, Opis, Cena, Miara_Ilosci, Ilosc)
         query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci, Ilosc) VALUES (?, ?, ?, ?, ?)"
         cursor.execute(query, product_data)
@@ -119,7 +121,7 @@ class database:
             query += " WHERE Produkt.Id LIKE '%{}%' OR Produkt.Nazwa LIKE '%{}%'".format(keyword, keyword)
 
         if sort_by is not None and sort_by != '':
-            query += " ORDER BY {}".format(sort_by)
+            query += " ORDER BY {} DESC".format(sort_by)
 
         cursor.execute(query)
         rows = cursor.fetchall()
@@ -127,7 +129,7 @@ class database:
         results = []
         for row in rows:
             Id, Nazwa, Opis, Cena, Miara_Ilosci, Ilosc = row
-            if not include_zero and Ilosc == 0:
+            if include_zero and Ilosc == 0:
                 continue
             results.append((Id, Nazwa, Opis, Cena, Ilosc, Miara_Ilosci))
 
