@@ -115,6 +115,24 @@ class GUI:
                 if(value==""):
                     value=None
                 data.append(value)
+
+            #Błędy
+            try:
+                id_value = int(data[0])
+            except ValueError:
+                tkinter.messagebox.showinfo('Error', 'ID must be an integer')
+                return
+            try:
+                 ilosc_value = float(data[4])
+            except ValueError:
+                tkinter.messagebox.showinfo('Error', 'Ilość must be a float')
+                return
+            try:
+                ocena_value = (data[3])
+            except ValueError:
+                tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
+                return
+
             resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
             if resoult == 'Not':
                 tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
