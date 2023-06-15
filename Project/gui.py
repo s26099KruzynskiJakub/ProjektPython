@@ -32,13 +32,13 @@ class GUI:
         self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
         self.separator_lineFirst.pack(side='left', padx=5, pady=5, fill='y')
 
-        self.bottom_label = tk.Label(self.top_frame, text="OrderBy: ")
+        self.bottom_label = tk.Label(self.top_frame, text="Sortuj po: ")
         self.bottom_label.pack(side='left')
 
 
         self.attribute_var = tk.StringVar()
         self.attribute_checkbuttons = []
-        attributes = ["ID", "Nazwa", "Opis", "Ocena", "Ilość", "Miara"]
+        attributes = ["ID", "Nazwa", "Opis", "Cena", "Ilość", "Miara"]
         for attribute in attributes:
             checkbutton = tk.Checkbutton(self.top_frame, text=attribute, variable=self.attribute_var, onvalue=attribute,
                                          offvalue="")
@@ -48,7 +48,7 @@ class GUI:
         self.separator_line = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
         self.separator_line.pack(side='left', padx=5, pady=5, fill='y')
         self.magazine_var = tk.BooleanVar()
-        self.magazine_button = tk.Checkbutton(self.top_frame, text="Must be in magazine", variable=self.magazine_var)
+        self.magazine_button = tk.Checkbutton(self.top_frame, text="Na magazynie", variable=self.magazine_var)
         self.magazine_button.pack(anchor="w",fill="both")
 
         self.separator1 = tk.Frame(self.main_window, height=5, bd=1, relief=tk.SUNKEN)
@@ -67,7 +67,7 @@ class GUI:
         self.bottom_frame = tk.Frame(self.main_window)
         self.bottom_frame.pack(side="bottom")
 
-        column_names = ["ID", "Nazwa", "Opis", "Ocena", "Ilość", "Miara"]
+        column_names = ["ID", "Nazwa", "Opis", "Cena", "Ilość", "Miara"]
 
         for i, name in enumerate(column_names):
             label = tk.Label(self.bottom_frame, text=name)
@@ -192,6 +192,10 @@ class GUI:
     def search(self):
         text_input = self.text.get("1.0", "end-1c")
         selected_option = self.attribute_var.get()
+        if selected_option == 'Ilość':
+            selected_option = 'Ilosc'
+        if selected_option == 'Miara':
+            selected_option = 'Miara_Ilosci'
         inMagazine = self.magazine_var.get()
         resoult = database.search(keyword=text_input, sort_by=selected_option, include_zero=inMagazine)
 
