@@ -1,5 +1,7 @@
+import os
 import tkinter
 import tkinter as tk
+from datetime import datetime
 from tkinter import ttk
 
 from database import database
@@ -13,6 +15,12 @@ class GUI:
 
         self.top_frame = tk.Frame(self.main_window)
         self.top_frame.pack(side="top")
+
+        self.buttomRaport = tk.Button(self.top_frame, text='Stwórz raport', command=self.createRaport)
+        self.buttomRaport.pack(side='left')
+
+        self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
+        self.separator_lineFirst.pack(side='left', padx=5, pady=5, fill='y')
 
         self.text = tk.Text(self.top_frame,insertbackground='blue')
         self.text.pack(side='left',pady=10)
@@ -193,10 +201,21 @@ class GUI:
             self.entry_fields[i].delete(0, tk.END)
             self.entry_fields[i].insert(tk.END, value)
 
+    def createRaport(self):
+        data_list = database.search()
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        current_time = datetime.now().strftime("%H-%M-%S")
+        report_name = f"Raport_{current_date}_{current_time}.txt"
+        report_folder = "raporty"
 
+        if not os.path.exists(report_folder):
+            os.makedirs(report_folder)
 
-# Create an instance of the GUI class
-gui = GUI()
+        file_path = os.path.join(report_folder, report_name)
+
+        with open(file_path, "w") as file:
+            for item in data_list:
+                file.write(str(item) + "\n")
 
 # metoda createDatabase tworząca bazę danych
 # metoda addValuesToDatabase dodająca podstawowe wartości
