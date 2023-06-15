@@ -16,24 +16,15 @@ class database:
             CREATE TABLE IF NOT EXISTS Produkt (
             Id integer NOT NULL CONSTRAINT Produkt_pk PRIMARY KEY ASC,
             Nazwa varchar(100) NOT NULL,
-            Opis text NOT NULL,
-            Cena double NOT NULL,
-            Miara_Ilosci varchar(50) NOT NULL
-            );
-            CREATE TABLE Magazyn (
-            Produkt_Id integer NOT NULL CONSTRAINT Magazyn_pk PRIMARY KEY,
-            Ilosc double NOT NULL,
-            CONSTRAINT Produkt_na_magazynie_Produkt FOREIGN KEY (Produkt_Id)
-            REFERENCES Produkt (Id)
+            Opis text,
+            Cena double,
+            Miara_Ilosci varchar(50),
+            Ilosc double
             );
             """
         )
-        cursor.execute('INSERT INTO Produkt VALUES(NULL, ?, ?, ?, ?);',('Mleko','Mleko w kartonie bez laktozy',2.4,'1 l'))
-        cursor.execute('INSERT INTO Produkt VALUES(NULL, ?, ?, ?, ?);',('Mleko kokosowe','Mleko kokosowe w kartonie bez laktozy',3.4,'1 l'))
-
-        cursor.execute('INSERT INTO Magazyn VALUES(?,?);',(1,3))
-        cursor.execute('INSERT INTO Magazyn VALUES(?,?);',(2,13))
-
+        cursor.execute('INSERT INTO Produkt VALUES(NULL, ?, ?, ?, ?, ?);',('Mleko','Mleko w kartonie bez laktozy',2.4,'1 l',3))
+        cursor.execute('INSERT INTO Produkt VALUES(NULL, ?, ?, ?, ?, ?);',('Mleko kokosowe','Mleko kokosowe w kartonie bez laktozy',3.4,'1 l',65))
         connection.commit()
         connection.close()
 
@@ -43,34 +34,30 @@ class database:
             return 'Not'
         connection = sqlite3.connect('baza.db')
         cursor = connection.cursor()
-        query = "SELECT Ilosc FROM Magazyn WHERE (Produkt_Id = ? OR (Nazwa = ? AND Opis = ? AND Cena = ? AND Miara_Ilosci = ?)) AND Ilosc > 0"
+        query = "SELECT Ilosc FROM Produkt WHERE (Id = ? OR (Nazwa = ? AND Opis = ? AND Cena = ? AND Miara_Ilosci = ?)) AND Ilosc > 0"
         cursor.execute(query, (Id,Nazwa,Opis,Cena,Miara_Ilosci))
         result = cursor.fetchone()
         if result:
             poZmianie = result[0] + Ilosc
-            query = "UPDATE Magazyn SET Ilosc = ? WHERE Produkt_Id = ?"
+            query = "UPDATE Produkt SET Ilosc = ? WHERE Id = ?"
             cursor.execute(query, (poZmianie, Id))
             connection.commit()
             connection.close()
             return 'Ok'
-        query = "SELECT Ilosc FROM Magazyn WHERE Produkt_Id = ?"
+        query = "SELECT Ilosc FROM Produkt WHERE Id = ?"
         cursor.execute(query, (Id,))
         result = cursor.fetchone()
         if result:
-            query = "UPDATE Magazyn SET Ilosc = ? WHERE Produkt_Id = ?"
+            query = "UPDATE Produkt SET Ilosc = ? WHERE Id = ?"
             cursor.execute(query, (Ilosc, Id))
             connection.commit()
             connection.close()
             return 'Ok'
         if Nazwa is None:
             return 'Not1'
-        product_data = (Nazwa, Opis, Cena, Miara_Ilosci)
-        query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci) VALUES (?, ?, ?, ?)"
+        product_data = (Nazwa, Opis, Cena, Miara_Ilosci, Ilosc)
+        query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci, Ilosc) VALUES (?, ?, ?, ?, ?)"
         cursor.execute(query, product_data)
-        product_id = cursor.lastrowid
-        magazyn_data = (product_id, Ilosc)
-        query = "INSERT INTO Magazyn (Produkt_Id, Ilosc) VALUES (?, ?)"
-        cursor.execute(query, magazyn_data)
         connection.commit()
         connection.close()
         return 'Ok'
@@ -95,12 +82,9 @@ class database:
             update_values.append("Cena = {}".format(Cena))
         if Miara_Ilosci is not None:
             update_values.append("Miara_Ilosci = '{}'".format(Miara_Ilosci))
-
-        update_query = "UPDATE Produkt SET " + ", ".join(update_values) + " WHERE Id = {}".format(Id)
-
         if Ilosc is not None:
-            update_query_magazyn = "UPDATE Magazyn SET Ilosc = {} WHERE Produkt_Id = {}".format(Ilosc, Id)
-            cursor.execute(update_query_magazyn)
+            update_values.append("Ilosc = {}".format(Ilosc))
+        update_query = "UPDATE Produkt SET " + ", ".join(update_values) + " WHERE Id = {}".format(Id)
 
         cursor.execute(update_query)
         conn.commit()
@@ -119,8 +103,6 @@ class database:
         delete_query_produkt = "DELETE FROM Produkt WHERE Id = {}".format(Id)
         cursor.execute(delete_query_produkt)
 
-        delete_query_magazyn = "DELETE FROM Magazyn WHERE Produkt_Id = {}".format(Id)
-        cursor.execute(delete_query_magazyn)
         conn.commit()
         conn.close()
         return 'Ok'
@@ -130,9 +112,8 @@ class database:
         conn = sqlite3.connect('baza.db')
         cursor = conn.cursor()
 
-        query = "SELECT Produkt.Id, Produkt.Nazwa, Produkt.Opis, Produkt.Cena, Produkt.Miara_Ilosci, Magazyn.Ilosc " \
-                "FROM Produkt " \
-                "LEFT JOIN Magazyn ON Produkt.Id = Magazyn.Produkt_Id"
+        query = "SELECT Id, Nazwa, Opis, Cena, Miara_Ilosci, Ilosc FROM Produkt "
+
 
         if keyword is not None and keyword != '':
             query += " WHERE Produkt.Id LIKE '%{}%' OR Produkt.Nazwa LIKE '%{}%'".format(keyword, keyword)

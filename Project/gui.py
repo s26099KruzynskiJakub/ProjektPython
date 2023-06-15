@@ -203,14 +203,14 @@ class GUI:
             if isinstance(widget, ttk.Treeview):
                 widget.destroy()
 
-        self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Miara_Ilosci", "Ilosc"))
+        self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Ilosc","Miara_Ilosci"))
 
         self.tree.heading("Id", text="ID")
         self.tree.heading("Nazwa", text="Nazwa")
         self.tree.heading("Opis", text="Opis")
         self.tree.heading("Cena", text="Cena")
-        self.tree.heading("Miara_Ilosci", text="Miara Ilości")
         self.tree.heading("Ilosc", text="Ilość")
+        self.tree.heading("Miara_Ilosci", text="Miara Ilości")
 
         for item in resoult:
             self.tree.insert("", tk.END, values=item)
