@@ -73,7 +73,7 @@ class GUI:
             label = tk.Label(self.bottom_frame, text=name)
             label.grid(row=0, column=i, padx=5, pady=5)
 
-        record_values = ["JakiesId", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
+        record_values = ["1", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
 
         self.entry_fields = []
         for i, value in enumerate(record_values):
@@ -96,6 +96,9 @@ class GUI:
 
         self.main_window.mainloop()
 
+    def submit_values(self, entry_fields):
+        values = [entry.get() for entry in entry_fields]
+        print(values)
 
     def call_method(self,event=None):
         text_input = self.text.get("1.0", "end-1c")  # Retrieve text from the text field
@@ -132,46 +135,6 @@ class GUI:
             if resoult == 'Not1':
                 tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
             self.search()
-            tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
-
-
-
-    def delete(self):
-        data = []
-        for entry in self.entry_fields:
-            value = entry.get()
-            if (value == ""):
-                value = None
-            data.append(value)
-
-        if (self.throwError(data)):
-            return
-
-        resoult = database.delete(data[0])
-        if resoult == 'Not':
-            tkinter.messagebox.showinfo('Error', 'Id cannot by null')
-        self.search()
-        tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
-
-
-    def update(self):
-        data = []
-        for entry in self.entry_fields:
-            value = entry.get()
-            if (value == ""):
-                value = None
-            data.append(value)
-
-        if (self.throwError(data)):
-            return
-
-        resoult = database.update(data[0],data[1],data[2],data[3],data[5],data[4])
-        if resoult == 'Not1':
-            tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
-        if resoult == 'Not2':
-            tkinter.messagebox.showinfo('Error', 'Id cannot by null')
-        self.search()
-        tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
     def throwError(self, data):
         try:
@@ -193,6 +156,40 @@ class GUI:
             tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
             return True
         return False
+    def delete(self):
+        data = []
+        for entry in self.entry_fields:
+            value = entry.get()
+            if (value == ""):
+                value = None
+            data.append(value)
+
+        if (self.throwError(data)):
+            return
+
+        resoult = database.delete(data[0])
+        if resoult == 'Not':
+            tkinter.messagebox.showinfo('Error', 'Id cannot by null')
+        self.search()
+
+
+    def update(self):
+        data = []
+        for entry in self.entry_fields:
+            value = entry.get()
+            if (value == ""):
+                value = None
+            data.append(value)
+
+        if (self.throwError(data)):
+            return
+
+        resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
+        if resoult == 'Not1':
+            tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+        if resoult == 'Not2':
+            tkinter.messagebox.showinfo('Error', 'Id cannot by null')
+        self.search()
 
     def search(self):
         text_input = self.text.get("1.0", "end-1c")
