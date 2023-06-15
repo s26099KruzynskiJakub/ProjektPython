@@ -132,6 +132,8 @@ class GUI:
             if resoult == 'Not1':
                 tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
             self.search()
+            tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
+
 
 
     def delete(self):
@@ -149,6 +151,7 @@ class GUI:
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
         self.search()
+        tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
 
     def update(self):
@@ -162,12 +165,13 @@ class GUI:
         if (self.throwError(data)):
             return
 
-        resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
+        resoult = database.update(data[0],data[1],data[2],data[3],data[5],data[4])
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
         if resoult == 'Not2':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
         self.search()
+        tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
     def throwError(self, data):
         try:
