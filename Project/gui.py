@@ -73,7 +73,7 @@ class GUI:
             label = tk.Label(self.bottom_frame, text=name)
             label.grid(row=0, column=i, padx=5, pady=5)
 
-        record_values = ["1", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
+        record_values = ["Jakies Id", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
 
         self.entry_fields = []
         for i, value in enumerate(record_values):
@@ -105,16 +105,6 @@ class GUI:
         print(text_input)  # Call the method with the text input
         #self.text.delete("1.0", "end")
         self.search()
-
-
-    def update_list(self):
-        # Clear the existing items in the listbox
-        self.listbox.delete(0, tk.END)
-
-        # Add new items to the listbox
-        items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
-        for item in items:
-            self.listbox.insert(tk.END, item)
 
 
     def add(self):
@@ -257,9 +247,3 @@ class GUI:
 
 
 
-# metoda createDatabase tworząca bazę danych
-# metoda addValuesToDatabase dodająca podstawowe wartości
-# metoda serch zwracająca listę danych wraz z mozliwością szukania po nazwa lub id oraz order by
-# metoda init króra sprawdza czy bazadanych istnieje i może wyłować create
-# metoda modyfikujProdukt zmienia informacje o produkcie
-# metoda usunProdukt usuwa produkt
