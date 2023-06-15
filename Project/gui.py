@@ -17,6 +17,8 @@ class GUI:
         self.text = tk.Text(self.top_frame,insertbackground='blue')
         self.text.pack(side='left',pady=10)
         self.text.config(width=10, height=1)
+        self.buttomSearch = tk.Button(self.top_frame,text='Szukaj',command=self.call_method)
+        self.buttomSearch.pack(side='left')
 
         self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
         self.separator_lineFirst.pack(side='left', padx=5, pady=5, fill='y')
@@ -64,23 +66,23 @@ class GUI:
 
         record_values = ["1", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
 
-        entry_fields = []
+        self.entry_fields = []
         for i, value in enumerate(record_values):
             entry = tk.Entry(self.bottom_frame)
             entry.insert(tk.END, value)
             entry.grid(row=1, column=i, padx=5, pady=5)
-            entry_fields.append(entry)
+            self.entry_fields.append(entry)
 
         button_frame = tk.Frame(self.bottom_frame)
         button_frame.grid(row=1, column=len(column_names), padx=5, pady=5, rowspan=2)
 
-        button_dodaj = tk.Button(button_frame, text="Dodaj")
+        button_dodaj = tk.Button(button_frame, text="Dodaj",command=self.add)
         button_dodaj.pack(fill="x", side='left')
 
-        button_usun = tk.Button(button_frame, text="Usuń")
+        button_usun = tk.Button(button_frame, text="Usuń",command=self.delete)
         button_usun.pack(fill="x", side='left')
 
-        button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj")
+        button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj",command=self.update)
         button_zaktualizuj.pack(fill="x",side='left')
 
         self.main_window.mainloop()
@@ -92,7 +94,7 @@ class GUI:
     def call_method(self,event=None):
         text_input = self.text.get("1.0", "end-1c")  # Retrieve text from the text field
         print(text_input)  # Call the method with the text input
-        self.text.delete("1.0", "end")
+        #self.text.delete("1.0", "end")
         self.search()
 
 
@@ -107,26 +109,40 @@ class GUI:
 
 
     def add(self):
-        #pobieranie wartości
-        resoult = database.add(1,'Nazwa','Opis','Cena','Miara_ilosci','Ilosc')
+        data = []
+        for entry in self.entry_fields:
+            value = entry.get()
+            data.append(value)
+        resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+        if resoult == 'Not1':
+            tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
+        self.search()
 
 
     def delete(self):
-        #pobieranie watoście id
-        resoult = database.delete(1)
+        data = []
+        for entry in self.entry_fields:
+            value = entry.get()
+            data.append(value)
+        resoult = database.delete(data[0])
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
+        self.search()
 
 
     def update(self):
-        # pobieranie wartości
-        resoult = database.update(1, 'Nazwa', 'Opis', 'Cena', 'Miara_ilosci', 'Ilosc')
+        data = []
+        for entry in self.entry_fields:
+            value = entry.get()
+            data.append(value)
+        resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
         if resoult == 'Not2':
             tkinter.messagebox.showinfo('Error', 'Id cannot by null')
+        self.search()
 
     def search(self):
         text_input = self.text.get("1.0", "end-1c")
@@ -135,7 +151,12 @@ class GUI:
         resoult = database.search(keyword=text_input, sort_by=selected_option, include_zero=inMagazine)
 
         for widget in self.middle_frame.winfo_children():
-            widget.destroy()
+            if isinstance(widget, ttk.Scrollbar):
+                widget.destroy()
+
+        for widget in self.middle_frame.winfo_children():
+            if isinstance(widget, ttk.Treeview):
+                widget.destroy()
 
         self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Miara_Ilosci", "Ilosc"))
 
@@ -155,6 +176,16 @@ class GUI:
 
         self.tree.pack(fill=tk.BOTH, expand=True)
 
+        self.tree.bind("<Double-1>", self.on_tree_double_click)
+
+    def on_tree_double_click(self, event):
+        selected_item = self.tree.selection()[0]
+
+        values = self.tree.item(selected_item, "values")
+
+        for i, value in enumerate(values):
+            self.entry_fields[i].delete(0, tk.END)
+            self.entry_fields[i].insert(tk.END, value)
 
 
 

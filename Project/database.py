@@ -39,7 +39,7 @@ class database:
 
     @staticmethod
     def add(Id,Nazwa=None,Opis=None,Cena=None,Miara_Ilosci=None,Ilosc=None):
-        if Ilosc is not None and Ilosc <0:
+        if Ilosc is not None and Ilosc < 0:
             return 'Not'
         connection = sqlite3.connect('baza.db')
         cursor = connection.cursor()
@@ -62,6 +62,8 @@ class database:
             connection.commit()
             connection.close()
             return 'Ok'
+        if Nazwa is None:
+            return 'Not1'
         product_data = (Nazwa, Opis, Cena, Miara_Ilosci)
         query = "INSERT INTO Produkt (Nazwa, Opis, Cena, Miara_Ilosci) VALUES (?, ?, ?, ?)"
         cursor.execute(query, product_data)
@@ -130,7 +132,7 @@ class database:
                 "FROM Produkt " \
                 "LEFT JOIN Magazyn ON Produkt.Id = Magazyn.Produkt_Id"
 
-        if keyword is not None:
+        if keyword is not None and keyword != '':
             query += " WHERE Produkt.Id LIKE '%{}%' OR Produkt.Nazwa LIKE '%{}%'".format(keyword, keyword)
 
         if sort_by is not None and sort_by != '':
