@@ -109,22 +109,26 @@ class GUI:
 
 
     def add(self):
-        data = []
-        for entry in self.entry_fields:
-            value = entry.get()
-            data.append(value)
-        resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
-        if resoult == 'Not':
-            tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
-        if resoult == 'Not1':
-            tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
-        self.search()
+            data = []
+            for entry in self.entry_fields:
+                value = entry.get()
+                if(value==""):
+                    value=None
+                data.append(value)
+            resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
+            if resoult == 'Not':
+                tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+            if resoult == 'Not1':
+                tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
+            self.search()
 
 
     def delete(self):
         data = []
         for entry in self.entry_fields:
             value = entry.get()
+            if (value == ""):
+                value = None
             data.append(value)
         resoult = database.delete(data[0])
         if resoult == 'Not':
@@ -136,6 +140,8 @@ class GUI:
         data = []
         for entry in self.entry_fields:
             value = entry.get()
+            if (value == ""):
+                value = None
             data.append(value)
         resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not1':
