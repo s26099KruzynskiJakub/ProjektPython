@@ -109,22 +109,26 @@ class GUI:
 
 
     def add(self):
-        data = []
-        for entry in self.entry_fields:
-            value = entry.get()
-            data.append(value)
-        resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),int(data[4]),data[5])
-        if resoult == 'Not':
-            tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
-        if resoult == 'Not1':
-            tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
-        self.search()
+            data = []
+            for entry in self.entry_fields:
+                value = entry.get()
+                if(value==""):
+                    value=None
+                data.append(value)
+            resoult = database.add(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
+            if resoult == 'Not':
+                tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+            if resoult == 'Not1':
+                tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
+            self.search()
 
 
     def delete(self):
         data = []
         for entry in self.entry_fields:
             value = entry.get()
+            if (value == ""):
+                value = None
             data.append(value)
         resoult = database.delete(data[0])
         if resoult == 'Not':
@@ -136,8 +140,10 @@ class GUI:
         data = []
         for entry in self.entry_fields:
             value = entry.get()
+            if (value == ""):
+                value = None
             data.append(value)
-        resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),int(data[4]),data[5])
+        resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
         if resoult == 'Not2':
@@ -158,14 +164,14 @@ class GUI:
             if isinstance(widget, ttk.Treeview):
                 widget.destroy()
 
-        self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Ilosc", "Miara_Ilosci"))
+        self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Miara_Ilosci", "Ilosc"))
 
         self.tree.heading("Id", text="ID")
         self.tree.heading("Nazwa", text="Nazwa")
         self.tree.heading("Opis", text="Opis")
         self.tree.heading("Cena", text="Cena")
-        self.tree.heading("Ilosc", text="Ilość")
         self.tree.heading("Miara_Ilosci", text="Miara Ilości")
+        self.tree.heading("Ilosc", text="Ilość")
 
         for item in resoult:
             self.tree.insert("", tk.END, values=item)
@@ -187,12 +193,10 @@ class GUI:
             self.entry_fields[i].delete(0, tk.END)
             self.entry_fields[i].insert(tk.END, value)
 
-    def createRaport(self):
-        resoult = database.search()
 
 
-
-
+# Create an instance of the GUI class
+gui = GUI()
 
 # metoda createDatabase tworząca bazę danych
 # metoda addValuesToDatabase dodająca podstawowe wartości
