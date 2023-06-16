@@ -136,8 +136,10 @@ class GUI:
         resoult = database.add(data[0], data[1], data[2], data[3], data[5], data[4])
         if resoult == 'Not':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+            return
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
+            return
         self.search()
 
         tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
