@@ -1,0 +1,3 @@
+(1, 'Mleko', 'Mleko w kartonie bez laktozy', 2.4, 20.0, '1 l')
+(2, 'Mleko kokosowe', 'Mleko kokosowe w kartonie bez laktozy', 3.4, 65.0, '1 l')
+(3, 'Fio³ek', 'jakis tam kwiatek', 5.75, 10.0, '1 l')
