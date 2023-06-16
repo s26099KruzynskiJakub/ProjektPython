@@ -199,7 +199,7 @@ class GUI:
         if self.throwError(data):
             return
 
-        resoult = database.update(int(data[0]), data[1], data[2], float(data[3]), data[5], int(data[4]))
+        resoult = database.update(data[0], data[1], data[2], data[3], data[5], data[4])
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
         if resoult == 'Not2':
