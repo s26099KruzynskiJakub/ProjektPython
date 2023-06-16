@@ -57,9 +57,6 @@ class GUI:
         self.middle_frame.pack(expand=True, fill="both")
         self.search()
 
-        # self.listbox = tk.Listbox(self.middle_frame)
-        # self.listbox.pack(expand=True, fill="both")
-
         self.separator2 = tk.Frame(self.main_window, height=2, bd=1, relief=tk.SUNKEN)
         self.separator2.pack(fill="x")
 
@@ -102,14 +99,6 @@ class GUI:
         for entry in self.entry_fields:
             entry.delete(0, tk.END)
 
-    def update_list(self):
-        # Clear the existing items in the listbox
-        self.listbox.delete(0, tk.END)
-
-        # Add new items to the listbox
-        items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
-        for item in items:
-            self.listbox.insert(tk.END, item)
 
     def add(self):
         data = []
@@ -149,6 +138,12 @@ class GUI:
                 data[3] = float(data[3])
         except ValueError:
             tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
+            return True
+        if data[1] is not None and len(data[1]) > 100:
+            tkinter.messagebox.showinfo('Error', 'Nazwa nie może mieć więcej niż 100 znaków')
+            return True
+        if data[5] is not None and len(data[5]) > 50:
+            tkinter.messagebox.showinfo('Error', 'Nazwa nie może mieć więcej niż 50 znaków')
             return True
         return False
 
@@ -252,10 +247,4 @@ class GUI:
                 file.write(str(item) + "\n")
         tkinter.messagebox.showinfo('Raport', 'Raport zapisany w forderze raoporty')
 
-#
-# metoda createDatabase tworząca bazę danych
-# metoda addValuesToDatabase dodająca podstawowe wartości
-# metoda serch zwracająca listę danych wraz z mozliwością szukania po nazwa lub id oraz order by
-# metoda init króra sprawdza czy bazadanych istnieje i może wyłować create
-# metoda modyfikujProdukt zmienia informacje o produkcie
-# metoda usunProdukt usuwa produkt
+
