@@ -252,6 +252,7 @@ class GUI:
                 file.write(str(item) + "\n")
         tkinter.messagebox.showinfo('Raport', 'Raport zapisany w forderze raoporty')
 
+#
 # metoda createDatabase tworząca bazę danych
 # metoda addValuesToDatabase dodająca podstawowe wartości
 # metoda serch zwracająca listę danych wraz z mozliwością szukania po nazwa lub id oraz order by
