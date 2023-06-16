@@ -23,10 +23,10 @@ class GUI:
         self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
         self.separator_lineFirst.pack(side='left', padx=5, pady=5, fill='y')
 
-        self.text = tk.Text(self.top_frame,insertbackground='blue')
-        self.text.pack(side='left',pady=10)
+        self.text = tk.Text(self.top_frame, insertbackground='blue')
+        self.text.pack(side='left', pady=10)
         self.text.config(width=10, height=1)
-        self.buttomSearch = tk.Button(self.top_frame,text='Szukaj',command=self.call_method)
+        self.buttomSearch = tk.Button(self.top_frame, text='Szukaj', command=self.search)
         self.buttomSearch.pack(side='left')
 
         self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
@@ -35,21 +35,20 @@ class GUI:
         self.bottom_label = tk.Label(self.top_frame, text="Sortuj po: ")
         self.bottom_label.pack(side='left')
 
-
         self.attribute_var = tk.StringVar()
         self.attribute_checkbuttons = []
         attributes = ["ID", "Nazwa", "Opis", "Cena", "Ilość", "Miara"]
         for attribute in attributes:
             checkbutton = tk.Checkbutton(self.top_frame, text=attribute, variable=self.attribute_var, onvalue=attribute,
                                          offvalue="")
-            checkbutton.pack(anchor="w",side='left')
+            checkbutton.pack(anchor="w", side='left')
             self.attribute_checkbuttons.append(checkbutton)
 
         self.separator_line = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
         self.separator_line.pack(side='left', padx=5, pady=5, fill='y')
         self.magazine_var = tk.BooleanVar()
         self.magazine_button = tk.Checkbutton(self.top_frame, text="Na magazynie", variable=self.magazine_var)
-        self.magazine_button.pack(anchor="w",fill="both")
+        self.magazine_button.pack(anchor="w", fill="both")
 
         self.separator1 = tk.Frame(self.main_window, height=5, bd=1, relief=tk.SUNKEN)
         self.separator1.pack(fill="x")
@@ -58,8 +57,8 @@ class GUI:
         self.middle_frame.pack(expand=True, fill="both")
         self.search()
 
-        #self.listbox = tk.Listbox(self.middle_frame)
-        #self.listbox.pack(expand=True, fill="both")
+        # self.listbox = tk.Listbox(self.middle_frame)
+        # self.listbox.pack(expand=True, fill="both")
 
         self.separator2 = tk.Frame(self.main_window, height=2, bd=1, relief=tk.SUNKEN)
         self.separator2.pack(fill="x")
@@ -73,7 +72,7 @@ class GUI:
             label = tk.Label(self.bottom_frame, text=name)
             label.grid(row=0, column=i, padx=5, pady=5)
 
-        record_values = ["1", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
+        record_values = ["Przykladowe Id", "Jakis Product", "Jakis Opis", "JakasOcena", "JakasIlosc", "JakasMiara"]
 
         self.entry_fields = []
         for i, value in enumerate(record_values):
@@ -85,27 +84,23 @@ class GUI:
         button_frame = tk.Frame(self.bottom_frame)
         button_frame.grid(row=1, column=len(column_names), padx=5, pady=5, rowspan=2)
 
-        button_dodaj = tk.Button(button_frame, text="Dodaj",command=self.add)
+        button_dodaj = tk.Button(button_frame, text="Dodaj", command=self.add)
         button_dodaj.pack(fill="x", side='left')
 
-        button_usun = tk.Button(button_frame, text="Usuń",command=self.delete)
+        button_usun = tk.Button(button_frame, text="Usuń", command=self.delete)
         button_usun.pack(fill="x", side='left')
 
-        button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj",command=self.update)
-        button_zaktualizuj.pack(fill="x",side='left')
+        button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj", command=self.update)
+        button_zaktualizuj.pack(fill="x", side='left')
+
+        button_wyczysc = tk.Button(button_frame, text="Wyczyść", command=self.clearValues)
+        button_wyczysc.pack(fill="x", side='left')
 
         self.main_window.mainloop()
 
-    def submit_values(self, entry_fields):
-        values = [entry.get() for entry in entry_fields]
-        print(values)
-
-    def call_method(self,event=None):
-        text_input = self.text.get("1.0", "end-1c")  # Retrieve text from the text field
-        print(text_input)  # Call the method with the text input
-        #self.text.delete("1.0", "end")
-        self.search()
-
+    def clearValues(self):
+        for entry in self.entry_fields:
+            entry.delete(0, tk.END)
 
     def update_list(self):
         # Clear the existing items in the listbox
@@ -116,26 +111,25 @@ class GUI:
         for item in items:
             self.listbox.insert(tk.END, item)
 
-
     def add(self):
-            data = []
-            for entry in self.entry_fields:
-                value = entry.get()
-                if(value==""):
-                    value=None
-                data.append(value)
+        data = []
+        for entry in self.entry_fields:
+            value = entry.get()
+            if (value == ""):
+                value = None
+            data.append(value)
 
-            if(self.throwError(data)):
-                return
+        if (self.throwError(data)):
+            return
 
-            resoult = database.add(data[0],data[1],data[2],data[3],data[5],data[4])
-            if resoult == 'Not':
-                tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
-            if resoult == 'Not1':
-                tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
-            self.search()
+        resoult = database.add(data[0], data[1], data[2], data[3], data[5], data[4])
+        if resoult == 'Not':
+            tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
+        if resoult == 'Not1':
+            tkinter.messagebox.showinfo('Error', 'Przy nowych produktach wymagana jest nazwa')
+        self.search()
 
-            tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
+        tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
     def throwError(self, data):
         try:
@@ -157,6 +151,7 @@ class GUI:
             tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
             return True
         return False
+
     def delete(self):
         data = []
         for entry in self.entry_fields:
@@ -174,7 +169,6 @@ class GUI:
         self.search()
         tkinter.messagebox.showinfo('Operacja', 'Operacja się powiodła!')
 
-
     def update(self):
         data = []
         for entry in self.entry_fields:
@@ -186,7 +180,7 @@ class GUI:
         if (self.throwError(data)):
             return
 
-        resoult = database.update(int(data[0]),data[1],data[2],float(data[3]),data[5],int(data[4]))
+        resoult = database.update(int(data[0]), data[1], data[2], float(data[3]), data[5], int(data[4]))
         if resoult == 'Not1':
             tkinter.messagebox.showinfo('Error', 'Ilość nie może być poniżej zera')
         if resoult == 'Not2':
@@ -212,7 +206,7 @@ class GUI:
             if isinstance(widget, ttk.Treeview):
                 widget.destroy()
 
-        self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Ilosc","Miara_Ilosci"))
+        self.tree = ttk.Treeview(self.middle_frame, columns=("Id", "Nazwa", "Opis", "Cena", "Ilosc", "Miara_Ilosci"))
 
         self.tree.heading("Id", text="ID")
         self.tree.heading("Nazwa", text="Nazwa")
@@ -257,8 +251,6 @@ class GUI:
             for item in data_list:
                 file.write(str(item) + "\n")
         tkinter.messagebox.showinfo('Raport', 'Raport zapisany w forderze raoporty')
-
-
 
 # metoda createDatabase tworząca bazę danych
 # metoda addValuesToDatabase dodająca podstawowe wartości
