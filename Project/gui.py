@@ -26,7 +26,7 @@ class GUI:
         self.text = tk.Text(self.top_frame,insertbackground='blue')
         self.text.pack(side='left',pady=10)
         self.text.config(width=10, height=1)
-        self.buttomSearch = tk.Button(self.top_frame,text='Szukaj',command=self.call_method)
+        self.buttomSearch = tk.Button(self.top_frame,text='Szukaj',command=self.search)
         self.buttomSearch.pack(side='left')
 
         self.separator_lineFirst = tk.Frame(self.top_frame, width=2, bd=1, relief=tk.SUNKEN)
@@ -155,6 +155,12 @@ class GUI:
                 data[3] = float(data[3])
         except ValueError:
             tkinter.messagebox.showinfo('Error', 'Ocena must be a float')
+            return True
+        if len(str(data[1])) > 100:
+            tkinter.messagebox.showinfo('Error', 'Zbyt długa nazwa, maksymalnie 100 znaków')
+            return True
+        if len(str(data[4])) > 50:
+            tkinter.messagebox.showinfo('Error', 'Zbyt długa miara, maksymalnie 50 znaków')
             return True
         return False
     def delete(self):
