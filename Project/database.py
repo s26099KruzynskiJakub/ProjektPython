@@ -3,12 +3,47 @@ import sqlite3
 
 
 class database:
+    """
+       Klasa `database` odpowiada za zarządzanie bazą danych produktów.
+
+       Metody:
+       - __init__(): Konstruktor klasy, tworzy bazę danych, jeśli nie istnieje.
+       - createDatabase(): Tworzy tabelę Produkt i wstawia przykładowe dane.
+       - add(): Dodaje nowy produkt do bazy danych.
+       - update(): Aktualizuje informacje o produkcie w bazie danych.
+       - delete(): Usuwa produkt z bazy danych.
+       - search(): Wyszukuje produkty w bazie danych.
+
+       Atrybuty:
+       Brak.
+
+       """
     def __init__(self):
+        """
+        Konstruktor klasy, tworzy bazę danych, jeśli nie istnieje.
+
+        Argumenty:
+        Brak.
+
+        Zwraca:
+        None.
+
+        """
         database_file = 'baza.db'
         if not os.path.isfile(database_file):
             self.createDatabase()
 
     def createDatabase(self):
+        """
+        Tworzy tabelę Produkt w bazie danych i wstawia przykładowe dane.
+
+        Argumenty:
+        Brak.
+
+        Zwraca:
+        None.
+
+        """
         connection = sqlite3.connect('baza.db')
         cursor = connection.cursor()
         cursor.executescript(
@@ -30,6 +65,22 @@ class database:
 
     @staticmethod
     def add(Id=None,Nazwa=None,Opis=None,Cena=None,Miara_Ilosci=None,Ilosc=None):
+        """
+        Dodaje nowy produkt do bazy danych.
+
+        Argumenty:
+        - Id (int): Identyfikator produktu. Jeśli None, zostanie automatycznie wygenerowany.
+        - Nazwa (str): Nazwa produktu.
+        - Opis (str): Opis produktu.
+        - Cena (float): Cena produktu.
+        - Miara_Ilosci (str): Jednostka miary ilości produktu.
+        - Ilosc (float): Dostępna ilość produktu.
+
+         Zwraca:
+         - 'Ok' (str): Dodanie produktu powiodło się.
+         - 'Not' (str): Nieprawidłowa wartość ilości produktu.
+
+        """
         if Ilosc is not None and Ilosc < 0:
             return 'Not'
         connection = sqlite3.connect('baza.db')
@@ -68,6 +119,23 @@ class database:
 
     @staticmethod
     def update(Id, Nazwa=None, Opis=None, Cena=None, Miara_Ilosci=None, Ilosc=None):
+        """
+                Aktualizuje informacje o produkcie w bazie danych.
+
+                Argumenty:
+                - Id (int): Identyfikator produktu.
+                - Nazwa (str): Nowa nazwa produktu. Jeśli None, nazwa nie zostanie zmieniona.
+                - Opis (str): Nowy opis produktu. Jeśli None, opis nie zostanie zmieniony.
+                - Cena (float): Nowa cena produktu. Jeśli None, cena nie zostanie zmieniona.
+                - Miara_Ilosci (str): Nowa jednostka miary ilości produktu. Jeśli None, jednostka miary ilości nie zostanie zmieniona.
+                - Ilosc (float): Nowa dostępna ilość produktu. Jeśli None, ilość nie zostanie zmieniona.
+
+                Zwraca:
+                - 'Ok' (str): Aktualizacja produktu powiodła się.
+                - 'Not1' (str): Nieprawidłowa wartość ilości produktu.
+                - 'Not2' (str): Brak identyfikatora produktu.
+
+                """
         if Ilosc is not None and Ilosc < 0:
             return 'Not1'
         if Id is None:
@@ -95,6 +163,17 @@ class database:
 
     @staticmethod
     def delete(Id):
+        """
+               Usuwa produkt z bazy danych.
+
+               Argumenty:
+               - Id (int): Identyfikator produktu.
+
+               Zwraca:
+               - 'Ok' (str): Usunięcie produktu powiodło się.
+               - 'Not' (str): Brak identyfikatora produktu.
+
+               """
         if Id is None:
             print("ID cannot be null.")
             return 'Not'
@@ -111,6 +190,18 @@ class database:
 
     @staticmethod
     def search(keyword=None, sort_by=None, include_zero=False):
+        """
+                Wyszukuje produkty w bazie danych.
+
+                Argumenty:
+                - keyword (str): Słowo kluczowe do wyszukania. Jeśli None, zostaną zwrócone wszystkie produkty.
+                - sort_by (str): Pole, według którego mają zostać posortowane wyniki. Jeśli None, wyniki nie będą sortowane.
+                - include_zero (bool): Określa, czy wyniki powinny zawierać produkty o ilości równej zero.
+
+                Zwraca:
+                - results (list): Lista wyników zawierających krotki (Id, Nazwa, Opis, Cena, Ilosc, Miara_Ilosci).
+
+                """
         conn = sqlite3.connect('baza.db')
         cursor = conn.cursor()
 
