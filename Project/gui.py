@@ -93,12 +93,12 @@ class GUI:
         button_zaktualizuj = tk.Button(button_frame, text="Zaktualizuj", command=self.update)
         button_zaktualizuj.pack(fill="x", side='left')
 
-        button_wyczysc = tk.Button(button_frame, text="Wyczyść", command=self.clearValues)
+        button_wyczysc = tk.Button(button_frame, text="Wyczyść", command=self.clearAllValues)
         button_wyczysc.pack(fill="x", side='left')
 
         self.main_window.mainloop()
 
-    def clearValues(self):
+    def clearAllValues(self):
         for entry in self.entry_fields:
             entry.delete(0, tk.END)
 
