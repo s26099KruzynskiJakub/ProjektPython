@@ -245,7 +245,7 @@ class GUI:
 
         self.tree.bind("<Double-1>", self.on_tree_double_click)
 
-    def on_tree_double_click(self):
+    def on_tree_double_click(self,event):
         selected_item = self.tree.selection()[0]
 
         values = self.tree.item(selected_item, "values")
