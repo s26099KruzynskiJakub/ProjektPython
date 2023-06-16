@@ -9,6 +9,30 @@ from database import database
 
 
 class GUI:
+    """
+     Ta klasa reprezentuje interfejs graficzny użytkownika do zarządzania magazynem.
+
+     Atrybuty:
+         main_window (tkinter.Tk): Główne okno interfejsu graficznego.
+         top_frame (tkinter.Frame): Górna ramka zawierająca przyciski i funkcjonalność wyszukiwania.
+         middle_frame (tkinter.Frame): Środkowa ramka zawierająca wyniki wyszukiwania.
+         bottom_frame (tkinter.Frame): Dolna ramka zawierająca pola wprowadzania do dodawania/aktualizowania rekordów.
+         entry_fields (list): Lista pól wprowadzania danych dla aktualizacji rekordów.
+         attribute_checkbuttons (list): Lista checkbuttonów do wyboru po czym sortujemy rekordy.
+         attribute_var (tkinter.StringVar): Zmienna przechowująca wybrany atrybut sortowania.
+         magazine_var (tkinter.BooleanVar): Zmienna przechowująca wybór czy rekordy mają być w bazie danych czy nie(jeżeli ilość =0 rekord nie zostanie zwrócony).
+
+     Metody:
+         clearAllValues: Czyści wszystkie pola wprowadzania danych w interfejsie graficznym dotyczącym dodawania, usuwania czy akutalizowania wartośći.
+         add: Dodaje nowy rekord do bazy danych na podstawie pól wprowadzania danych.
+         throwError: Sprawdza poprawność wprowadzanych danych i wyświetla ewentualne komunikaty o błędach.
+         delete: Usuwa rekord z bazy danych na podstawie pól wprowadzania danych.
+         update: Aktualizuje rekord w bazie danych na podstawie pól wprowadzania danych.
+         search: Wykonuje wyszukiwanie w bazie danych na podstawie wprowadzonego tekstu i wybranych atrybutów.
+         on_tree_double_click: Obsługuje zdarzenie podwójnego kliknięcia na element wyniku wyszukiwania.
+         createRaport: Tworzy plik raportu z aktualnymi rekordami bazy danych.
+
+     """
     def __init__(self):
 
         self.main_window = tk.Tk()
@@ -98,17 +122,15 @@ class GUI:
     def clearAllValues(self):
         for entry in self.entry_fields:
             entry.delete(0, tk.END)
-
-
     def add(self):
         data = []
         for entry in self.entry_fields:
             value = entry.get()
-            if (value == ""):
+            if value == "":
                 value = None
             data.append(value)
 
-        if (self.throwError(data)):
+        if self.throwError(data):
             return
 
         resoult = database.add(data[0], data[1], data[2], data[3], data[5], data[4])
@@ -151,11 +173,11 @@ class GUI:
         data = []
         for entry in self.entry_fields:
             value = entry.get()
-            if (value == ""):
+            if value == "":
                 value = None
             data.append(value)
 
-        if (self.throwError(data)):
+        if self.throwError(data):
             return
 
         resoult = database.delete(data[0])
@@ -168,11 +190,11 @@ class GUI:
         data = []
         for entry in self.entry_fields:
             value = entry.get()
-            if (value == ""):
+            if value == "":
                 value = None
             data.append(value)
 
-        if (self.throwError(data)):
+        if self.throwError(data):
             return
 
         resoult = database.update(int(data[0]), data[1], data[2], float(data[3]), data[5], int(data[4]))
@@ -221,7 +243,7 @@ class GUI:
 
         self.tree.bind("<Double-1>", self.on_tree_double_click)
 
-    def on_tree_double_click(self, event):
+    def on_tree_double_click(self):
         selected_item = self.tree.selection()[0]
 
         values = self.tree.item(selected_item, "values")
@@ -246,5 +268,3 @@ class GUI:
             for item in data_list:
                 file.write(str(item) + "\n")
         tkinter.messagebox.showinfo('Raport', 'Raport zapisany w forderze raoporty')
-
-
